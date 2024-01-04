@@ -1,0 +1,18 @@
+---
+collections:
+  - ansible.posix
+  - community.general
+  - community.docker
+  - ansible.netcommon
+  - community.sops
+  - ansible.utils
+  - geerlingguy.mac
+
+roles:
+  - name: shell
+    src: https://github.com/fred-drake/ansible-role-shell.git
+    version: main
+  - name: accessibility
+    src: https://github.com/fred-drake/ansible-role-accessibility.git
+    version: master
+  - elliotweiser.osx-command-line-tools

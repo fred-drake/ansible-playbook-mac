@@ -1,0 +1,18 @@
+---
+# - name: Install or Upgrade Homebrew Packages
+#   ansible.builtin.command: "{{ homebrew_executable_path }} install {{ item }}"
+#   register: command_result
+#   changed_when: ("is already" not in command_result.stderr)
+#   loop: "{{ homebrew_installed_packages }}"
+#   when: >
+#     homebrew_installed_packages is defined
+#     and homebrew_installed_packages | length > 0
+- name: Install or Upgrade Homebrew Casks
+  ansible.builtin.command: >
+      {{ homebrew_executable_path }} install --cask {{ item }}
+  register: command_result
+  changed_when: ("is already" not in command_result.stderr)
+  loop: "{{ homebrew_installed_casks }}"
+  when: >
+    homebrew_installed_casks is defined
+    and homebrew_installed_casks | length > 0

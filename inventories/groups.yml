@@ -1,0 +1,5 @@
+---
+all:
+  hosts:
+    mac-studio:
+    macbook-pro:

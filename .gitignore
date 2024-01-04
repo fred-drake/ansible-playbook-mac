@@ -6,6 +6,7 @@
 *.retry
 .vault_pass
 galaxy_collections/
+galaxy_roles/
 id_ansible
 **/*.tmp.yml
 

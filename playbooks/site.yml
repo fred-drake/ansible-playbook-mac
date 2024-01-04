@@ -1,0 +1,41 @@
+---
+- name: Playbook for configuring my site
+  hosts: all
+  become: true
+  tasks:
+    - name: Shell
+      ansible.builtin.include_role:
+        name: shell
+    - name: Accessibility
+      ansible.builtin.include_role:
+        name: accessibility
+    - name: Command Line Tools
+      ansible.builtin.include_role:
+        name: elliotweiser.osx-command-line-tools
+    # - name: Homebrew install
+    #   become: false
+    #   community.general.homebrew:
+    #     name: "{{ homebrew_installed_packages }}"
+    #     state: latest
+    # - name: Homebrew Cask install/upgrade
+    #   become: false
+    #   community.general.homebrew_cask:
+    #     name: alacritty
+    #     state: present
+    - name: Ensure homebrew directories are writable by user
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0755'
+        owner: "{{ ansible_user }}"
+      loop:
+        - /opt/homebrew
+        - /opt/homebrew/share/zsh
+        - /opt/homebrew/share/zsh/site-functions
+- name: Install and Update via Homebrew
+  hosts: all
+  become: false
+  tasks:
+    - name: Install Homebrew formulae
+      ansible.builtin.include_role:
+        name: homebrew
