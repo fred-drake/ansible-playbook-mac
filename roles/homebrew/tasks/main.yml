@@ -1,18 +1,51 @@
 ---
-# - name: Install or Upgrade Homebrew Packages
-#   ansible.builtin.command: "{{ homebrew_executable_path }} install {{ item }}"
-#   register: command_result
-#   changed_when: ("is already" not in command_result.stderr)
-#   loop: "{{ homebrew_installed_packages }}"
-#   when: >
-#     homebrew_installed_packages is defined
-#     and homebrew_installed_packages | length > 0
-- name: Install or Upgrade Homebrew Casks
-  ansible.builtin.command: >
-      {{ homebrew_executable_path }} install --cask {{ item }}
-  register: command_result
-  changed_when: ("is already" not in command_result.stderr)
-  loop: "{{ homebrew_installed_casks }}"
+- name: Pull list of outdated Homebrew formulae
+  ansible.builtin.command: "{{ homebrew_executable_path }} outdated --formula --greedy"
+  register: formula_outdated_result
+  changed_when: false
+  failed_when: false
+  when: >
+    homebrew_installed_packages is defined
+    and homebrew_installed_packages | length > 0
+- name: Pull list of outdated Homebrew casks
+  ansible.builtin.command: "{{ homebrew_executable_path }} outdated --cask --greedy"
+  register: cask_outdated_result
+  changed_when: false
+  failed_when: false
+  when: >
+    homebrew_installed_casks is defined
+    and homebrew_installed_casks | length > 0
+
+- name: Homebrew outdated formulae
+  ansible.builtin.debug:
+    msg: "{{ formula_outdated_result.stdout_lines | length }} outdated formulae"
+  when: >
+    homebrew_installed_packages is defined
+    and homebrew_installed_packages | length > 0
+- name: Homebrew outdated casks
+  ansible.builtin.debug:
+    msg: "{{ cask_outdated_result.stdout_lines | length }} outdated casks"
+  when: >
+    homebrew_installed_casks is defined
+    and homebrew_installed_casks | length > 0
+
+- name: Pause if Alacritty is in the list of outdated casks
+  ansible.builtin.pause:
+    prompt: "Alacritty is in the list of outdated casks! Run this in stock terminal before proceeding!"
+  when: >
+    homebrew_installed_casks is defined
+    and homebrew_installed_casks | length > 0
+    and "alacritty" in cask_outdated_result.stdout_lines
+
+- name: Formulae tasks
+  ansible.builtin.include_tasks: formulae.yml
+  when: >
+    homebrew_installed_packages is defined
+    and homebrew_installed_packages | length > 0
+    and not homebrew_casks_only
+
+- name: Cask tasks
+  ansible.builtin.include_tasks: cask.yml
   when: >
     homebrew_installed_casks is defined
     and homebrew_installed_casks | length > 0

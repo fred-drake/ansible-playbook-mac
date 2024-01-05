@@ -2,3 +2,13 @@
 homebrew_executable_path: /opt/homebrew/bin/brew
 homebrew_installed_casks: []
 homebrew_installed_packages: []
+
+homebrew_casks_only: false
+homebrew_outdated_formulae_only: false
+homebrew_outdated_casks_only: false
+
+homebrew_mas_executable_path: /opt/homebrew/bin/mas
+homebrew_mas_installed_apps: []
+
+homebrew_casks_to_delete: []
+homebrew_packages_to_delete: []

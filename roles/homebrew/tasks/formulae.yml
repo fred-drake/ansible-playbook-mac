@@ -1,0 +1,27 @@
+---
+- name: Delete Selected Homebrew Packages
+  ansible.builtin.command: "{{ homebrew_executable_path }} uninstall {{ item }}"
+  register: command_result
+  changed_when: ("No such keg" not in command_result.stderr)
+  loop: "{{ homebrew_packages_to_delete }}"
+  failed_when: >
+    command_result.rc != 0
+    and "No such keg" not in command_result.stderr
+  when: >
+    homebrew_packages_to_delete is defined
+    and homebrew_packages_to_delete | length > 0
+    and not homebrew_outdated_formulae_only
+
+- name: Install or Upgrade All Homebrew Packages
+  ansible.builtin.command: "{{ homebrew_executable_path }} install {{ item }}"
+  register: command_result
+  changed_when: ("is already" not in command_result.stderr)
+  loop: "{{ homebrew_installed_packages }}"
+  when: not homebrew_outdated_formulae_only
+
+- name: Upgrade All Outdated Homebrew Packages
+  ansible.builtin.command: "{{ homebrew_executable_path }} upgrade {{ item }}"
+  register: command_result
+  changed_when: ("is already" not in command_result.stderr)
+  loop: "{{ formula_outdated_result.stdout_lines }}"
+  when: homebrew_outdated_formulae_only

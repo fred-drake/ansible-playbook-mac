@@ -1,0 +1,11 @@
+---
+- name: Update via Homebrew
+  hosts: all
+  become: false
+  gather_facts: false
+  vars:
+    homebrew_outdated_formulae_only: true
+    homebrew_outdated_casks_only: true
+  roles:
+    - homebrew
+    - mas

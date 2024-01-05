@@ -1,6 +1,7 @@
 ---
 - name: Playbook for configuring my site
   hosts: all
+  connection: local
   become: true
   tasks:
     - name: Shell
@@ -12,16 +13,6 @@
     - name: Command Line Tools
       ansible.builtin.include_role:
         name: elliotweiser.osx-command-line-tools
-    # - name: Homebrew install
-    #   become: false
-    #   community.general.homebrew:
-    #     name: "{{ homebrew_installed_packages }}"
-    #     state: latest
-    # - name: Homebrew Cask install/upgrade
-    #   become: false
-    #   community.general.homebrew_cask:
-    #     name: alacritty
-    #     state: present
     - name: Ensure homebrew directories are writable by user
       ansible.builtin.file:
         path: "{{ item }}"
@@ -39,3 +30,6 @@
     - name: Install Homebrew formulae
       ansible.builtin.include_role:
         name: homebrew
+    - name: Updated Mac App Store apps
+      ansible.builtin.include_role:
+        name: mas

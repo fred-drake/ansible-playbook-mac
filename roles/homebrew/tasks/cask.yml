@@ -1,0 +1,30 @@
+---
+- name: Delete Selected Homebrew Casks
+  ansible.builtin.command: >
+      {{ homebrew_executable_path }} uninstall --cask {{ item }}
+  register: command_result
+  changed_when: ("is not installed" not in command_result.stderr)
+  loop: "{{ homebrew_casks_to_delete }}"
+  failed_when: >
+    command_result.rc != 0
+    and "is not installed" not in command_result.stderr
+  when: >
+    homebrew_casks_to_delete is defined
+    and homebrew_casks_to_delete | length > 0
+    and not homebrew_outdated_casks_only
+
+- name: Install or Upgrade All Homebrew Casks
+  ansible.builtin.command: >
+      {{ homebrew_executable_path }} install --cask {{ item }}
+  register: command_result
+  changed_when: ("is already" not in command_result.stderr)
+  loop: "{{ homebrew_installed_casks }}"
+  when: not homebrew_outdated_casks_only
+
+- name: Upgrade All Outdated Homebrew Casks
+  ansible.builtin.command: >
+      {{ homebrew_executable_path }} upgrade --cask {{ item }}
+  register: command_result
+  changed_when: ("is already" not in command_result.stderr)
+  loop: "{{ cask_outdated_result.stdout_lines }}"
+  when: homebrew_outdated_casks_only

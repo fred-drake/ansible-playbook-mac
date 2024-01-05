@@ -1,0 +1,21 @@
+---
+- name: Pull list of outdated MAS apps
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      mas outdated | awk '{print $1}'
+    executable: /bin/bash
+  register: homebrew_mas_outdated_result
+  changed_when: false
+  failed_when: false
+
+- name: MAS outdated apps
+  ansible.builtin.debug:
+    msg: "{{ homebrew_mas_outdated_result.stdout_lines | length }} outdated apps"
+
+- name: Upgrade All Outdated Mac Store Apps
+  ansible.builtin.command: >
+      mas upgrade {{ item }}
+  register: command_result
+  changed_when: true
+  loop: "{{ homebrew_mas_outdated_result.stdout_lines }}"
