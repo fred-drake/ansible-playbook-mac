@@ -430,6 +430,7 @@ homebrew_installed_casks:
   - miniforge
   - miro
   - moonlight
+  - nrlquaker-winbox
   - numi
   - obsidian
   - origin
