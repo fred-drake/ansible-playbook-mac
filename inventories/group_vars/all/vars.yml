@@ -404,7 +404,6 @@ homebrew_installed_casks:
   - balenaetcher
   - bartender
   - bettertouchtool
-  - brave-browser
   - cakebrew
   - calibre
   - daisydisk
@@ -420,6 +419,7 @@ homebrew_installed_casks:
   - gimp
   - gog-galaxy
   - goland
+  - google-chrome
   - google-drive
   - itsycal
   - macdown
@@ -462,7 +462,7 @@ homebrew_installed_casks:
   - zoom
 
 homebrew_casks_to_delete:
-  - google-chrome
   - alex313031-thorium
   - iterm2
   - talosctl
+  - brave-browser
