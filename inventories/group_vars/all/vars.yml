@@ -464,5 +464,4 @@ homebrew_installed_casks:
 homebrew_casks_to_delete:
   - alex313031-thorium
   - iterm2
-  - talosctl
   - brave-browser
